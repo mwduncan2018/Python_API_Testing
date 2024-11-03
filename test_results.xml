@@ -1,1 +1,89 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="11" time="0.521" timestamp="2024-11-03T12:26:34.706305-05:00" hostname="DESKTOP-69FJA4Q"><testcase classname="test_api" name="test_getBooks_gToken_whenNoApiAccessToken_shouldReturn403" time="0.008" /><testcase classname="test_api" name="test_getBooks_gToken_whenValidApiAccessToken_shouldReturn200" time="0.026" /><testcase classname="test_api" name="test_getBooks_searchById_whenValidId_shouldReturnBook" time="0.029" /><testcase classname="test_api" name="test_getBooks_searchById_whenInvalidId_shouldReturn404" time="0.029" /><testcase classname="test_api" name="test_getBooks_searchByTitle_whenValidTitle_shouldReturnBook" time="0.030" /><testcase classname="test_api" name="test_getBooks_searchByTitle_whenInvalidTitle_shouldReturnNoBooks" time="0.032" /><testcase classname="test_api" name="test_getBooks_searchByAuthor_whenValidAuthor_shouldReturnBook" time="0.027" /><testcase classname="test_api" name="test_getBooks_whenInvalidAuthor_shouldReturnNoBooks" time="0.029" /><testcase classname="test_api" name="test_postBooks_addBook_whenValidRequest_shouldSuccessfullyAddBook" time="0.063" /><testcase classname="test_api" name="test_deleteBooks_deleteBook_whenValidBasicAuth_shouldDeleteBook" time="0.108" /><testcase classname="test_api" name="test_deleteBooks_deleteBook_whenInvalidBasicAuth_shouldNotDeleteBook" time="0.092" /></testsuite></testsuites>
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="11" time="0.614" timestamp="2024-11-03T12:28:11.367614-05:00" hostname="DESKTOP-69FJA4Q"><testcase classname="test_api" name="test_getBooks_gToken_whenNoApiAccessToken_shouldReturn403" time="0.009" /><testcase classname="test_api" name="test_getBooks_gToken_whenValidApiAccessToken_shouldReturn200" time="0.025" /><testcase classname="test_api" name="test_getBooks_searchById_whenValidId_shouldReturnBook" time="0.029"><failure message="KeyError: 'invalid'">context = {'book_ids': []}
+
+    def test_getBooks_searchById_whenValidId_shouldReturnBook(context):
+        # Given G-Token is provided
+        headers = { 'g-token': ConfigProvider.get_g_token() }
+    
+        # When a book is requested by ID
+        url = ConfigProvider.get_host() + "/books/1"
+        response = requests.request("GET", url, headers=headers, data="")
+    
+        # Then 200 is returned
+        assert response.status_code == 200
+    
+        # And the ISBN of the returned book is 1593281056
+&gt;       assert response.json()["invalid"] == '1593281056'
+E       KeyError: 'invalid'
+
+test_api.py:44: KeyError</failure></testcase><testcase classname="test_api" name="test_getBooks_searchById_whenInvalidId_shouldReturn404" time="0.028" /><testcase classname="test_api" name="test_getBooks_searchByTitle_whenValidTitle_shouldReturnBook" time="0.031"><failure message="KeyError: 'invalid'">context = {'book_ids': []}
+
+    def test_getBooks_searchByTitle_whenValidTitle_shouldReturnBook(context):
+        # Given G-Token is provided
+        headers = { 'g-token': ConfigProvider.get_g_token() }
+    
+        # When a book is requested by title
+        params = "?title=The Screwtape Letters"
+        url = ConfigProvider.get_host() + "/books" + params
+        response = requests.request("GET", url, headers=headers, data="")
+    
+        # Then 200 is returned
+        assert response.status_code == 200
+    
+        # And the ISBN of the returned book is 0060652934
+&gt;       assert response.json()[0]["invalid"] == '0060652934'
+E       KeyError: 'invalid'
+
+test_api.py:70: KeyError</failure></testcase><testcase classname="test_api" name="test_getBooks_searchByTitle_whenInvalidTitle_shouldReturnNoBooks" time="0.009" /><testcase classname="test_api" name="test_getBooks_searchByAuthor_whenValidAuthor_shouldReturnBook" time="0.031"><failure message="KeyError: 'invalid'">context = {'book_ids': []}
+
+    def test_getBooks_searchByAuthor_whenValidAuthor_shouldReturnBook(context):
+        # Given G-Token is provided
+        headers = { 'g-token': ConfigProvider.get_g_token() }
+    
+        # When a book is requested by an author
+        params = "?author=Greg Bahnsen"
+        url = ConfigProvider.get_host() + "/books" + params
+        response = requests.request("GET", url, headers=headers, data="")
+    
+        # Then 200 is returned
+        assert response.status_code == 200
+    
+        # And the ISBN of the returned book is 0875520987
+&gt;       assert response.json()[0]["invalid"] == '0875520987'
+E       KeyError: 'invalid'
+
+test_api.py:100: KeyError</failure></testcase><testcase classname="test_api" name="test_getBooks_whenInvalidAuthor_shouldReturnNoBooks" time="0.023" /><testcase classname="test_api" name="test_postBooks_addBook_whenValidRequest_shouldSuccessfullyAddBook" time="0.070"><failure message="KeyError: 'invalid'">context = {'book_ids': [51]}
+
+    def test_postBooks_addBook_whenValidRequest_shouldSuccessfullyAddBook(context):
+        # Given a book to add
+        unique = str(time.time()*1000000).replace('.','')
+        title = "Automation Book " + unique
+        author = "Automation Author " + unique
+        isbn = "1234" + unique
+        releaseDate = "2019-02-01"
+        payload = json.dumps({
+            "title": title,
+            "author": author,
+            "isbn": isbn,
+            "releaseDate": releaseDate
+            })
+    
+        # When a book is added
+        url = ConfigProvider.get_host() + "/books"
+        headers = {
+            'g-token': 'ROM831ESV',
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic Og=='
+            }
+        response = requests.request("POST", url, headers=headers, data=payload)
+        context["book_ids"].append(response.json()["id"])
+    
+        # Then 201 is returned
+        assert response.status_code == 201
+    
+        # And the response contains the added book
+        assert response.json()["title"] == title
+        assert response.json()["author"] == author
+&gt;       assert response.json()["invalid"] == isbn
+E       KeyError: 'invalid'
+
+test_api.py:147: KeyError</failure></testcase><testcase classname="test_api" name="test_deleteBooks_deleteBook_whenValidBasicAuth_shouldDeleteBook" time="0.109" /><testcase classname="test_api" name="test_deleteBooks_deleteBook_whenInvalidBasicAuth_shouldNotDeleteBook" time="0.095" /></testsuite></testsuites>
