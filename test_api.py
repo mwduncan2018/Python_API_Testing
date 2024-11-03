@@ -27,7 +27,7 @@ def test_getBooks_gToken_whenValidApiAccessToken_shouldReturn200(context):
     response = requests.request("GET", url, headers=headers, data="")  
 
     # Then 200 is returned
-    assert response.status_code == 999
+    assert response.status_code == 200
 
 def test_getBooks_searchById_whenValidId_shouldReturnBook(context):
     # Given G-Token is provided
@@ -38,7 +38,7 @@ def test_getBooks_searchById_whenValidId_shouldReturnBook(context):
     response = requests.request("GET", url, headers=headers, data="")  
 
     # Then 200 is returned
-    assert response.status_code == 999
+    assert response.status_code == 200
 
     # And the ISBN of the returned book is 1593281056
     assert response.json()["isbn"] == '1593281056'
@@ -64,7 +64,7 @@ def test_getBooks_searchByTitle_whenValidTitle_shouldReturnBook(context):
     response = requests.request("GET", url, headers=headers, data="")  
 
     # Then 200 is returned
-    assert response.status_code == 999
+    assert response.status_code == 200
 
     # And the ISBN of the returned book is 0060652934
     assert response.json()[0]["isbn"] == '0060652934'
@@ -79,7 +79,7 @@ def test_getBooks_searchByTitle_whenInvalidTitle_shouldReturnNoBooks(context):
     response = requests.request("GET", url, headers=headers, data="")  
 
     # Then 200 is returned
-    assert response.status_code == 999
+    assert response.status_code == 200
 
     # And the response contains no books
     assert len(response.json()) == 0
@@ -94,7 +94,7 @@ def test_getBooks_searchByAuthor_whenValidAuthor_shouldReturnBook(context):
     response = requests.request("GET", url, headers=headers, data="")  
 
     # Then 200 is returned
-    assert response.status_code == 999
+    assert response.status_code == 200
 
     # And the ISBN of the returned book is 0875520987
     assert response.json()[0]["isbn"] == '0875520987'
@@ -109,7 +109,7 @@ def test_getBooks_whenInvalidAuthor_shouldReturnNoBooks(context):
     response = requests.request("GET", url, headers=headers, data="")  
 
     # Then 200 is returned
-    assert response.status_code == 999
+    assert response.status_code == 200
 
     # And the response contains no books
     assert len(response.json()) == 0
@@ -202,11 +202,11 @@ def test_deleteBooks_deleteBook_whenInvalidBasicAuth_shouldNotDeleteBook(context
     response = requests.request("DELETE", url, headers=headers)
 
     # Then 401 is returned
-    assert response.status_code == 401
+    assert response.status_code == 999
 
     # And the book is found when requested
     url = ConfigProvider.get_host() + "/books/" + str(book_id)
     headers = { 'g-token': ConfigProvider.get_g_token() }
     response = requests.request("GET", url, headers=headers, data="")
-    assert response.status_code == 999
+    assert response.status_code == 200
     
