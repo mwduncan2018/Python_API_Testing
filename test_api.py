@@ -7,7 +7,7 @@ import time
 from config_provider import ConfigProvider
 
 
-def test_getBooks_noApiAccessToken_shouldReturn403(context):
+def test_getBooks_gToken_whenNoApiAccessToken_shouldReturn403(context):
     # Given G-Token is not provided
     headers = { }
 
@@ -18,7 +18,7 @@ def test_getBooks_noApiAccessToken_shouldReturn403(context):
     # Then 403 is returned
     assert response.status_code == 403
 
-def test_getBooks_withApiAccessToken_shouldReturn200(context):
+def test_getBooks_gToken_whenValidApiAccessToken_shouldReturn200(context):
     # Given G-Token is provided
     headers = { 'g-token': ConfigProvider.get_g_token() }
 
@@ -29,7 +29,7 @@ def test_getBooks_withApiAccessToken_shouldReturn200(context):
     # Then 200 is returned
     assert response.status_code == 200
 
-def test_getBooks_searchByValidId(context):
+def test_getBooks_searchById_whenValidId_shouldReturnBook(context):
     # Given G-Token is provided
     headers = { 'g-token': ConfigProvider.get_g_token() }
 
@@ -43,7 +43,7 @@ def test_getBooks_searchByValidId(context):
     # And the ISBN of the returned book is 1593281056
     assert response.json()["isbn"] == '1593281056'
 
-def test_getBooks_searchByInvalidId(context):
+def test_getBooks_searchById_whenInvalidId_shouldReturn404(context):
     # Given G-Token is provided
     headers = { 'g-token': ConfigProvider.get_g_token() }
 
@@ -54,7 +54,7 @@ def test_getBooks_searchByInvalidId(context):
     # Then 404 is returned
     assert response.status_code == 404
 
-def test_getBooks_searchByValidTitle(context):
+def test_getBooks_searchByTitle_whenValidTitle_shouldReturnBook(context):
     # Given G-Token is provided
     headers = { 'g-token': ConfigProvider.get_g_token() }
 
@@ -69,7 +69,7 @@ def test_getBooks_searchByValidTitle(context):
     # And the ISBN of the returned book is 0060652934
     assert response.json()[0]["isbn"] == '0060652934'
 
-def test_getBooks_searchByInvalidTitle(context):
+def test_getBooks_searchByTitle_whenInvalidTitle_shouldReturnNoBooks(context):
     # Given G-Token is provided
     headers = { 'g-token': ConfigProvider.get_g_token() }
 
@@ -84,7 +84,7 @@ def test_getBooks_searchByInvalidTitle(context):
     # And the response contains no books
     assert len(response.json()) == 0
 
-def test_getBooks_searchByValidAuthor(context):
+def test_getBooks_searchByAuthor_whenValidAuthor_shouldReturnBook(context):
     # Given G-Token is provided
     headers = { 'g-token': ConfigProvider.get_g_token() }
 
@@ -99,7 +99,7 @@ def test_getBooks_searchByValidAuthor(context):
     # And the ISBN of the returned book is 0875520987
     assert response.json()[0]["isbn"] == '0875520987'
 
-def test_getBooks_searchByInvalidAuthor(context):
+def test_getBooks_whenInvalidAuthor_shouldReturnNoBooks(context):
     # Given G-Token is provided
     headers = { 'g-token': ConfigProvider.get_g_token() }
 
@@ -114,7 +114,7 @@ def test_getBooks_searchByInvalidAuthor(context):
     # And the response contains no books
     assert len(response.json()) == 0
 
-def test_postBooks_addBook(context):
+def test_postBooks_addBook_whenValidRequest_shouldSuccessfullyAddBook(context):
     # Given a book to add
     unique = str(time.time()*1000000).replace('.','')
     title = "Automation Book " + unique
@@ -147,7 +147,7 @@ def test_postBooks_addBook(context):
     assert response.json()["isbn"] == isbn
     assert response.json()["releaseDate"] == releaseDate
 
-def test_deleteBooks_deleteBookWithValidBasicAuth(context):
+def test_deleteBooks_deleteBook_whenValidBasicAuth_shouldDeleteBook(context):
     # Given a book has been added
     unique = str(time.time()*1000000).replace('.','')
     title = "Automation Book " + unique
@@ -179,7 +179,7 @@ def test_deleteBooks_deleteBookWithValidBasicAuth(context):
     assert response.status_code == 404
 
 
-def test_deleteBooks_deleteBookWithoutBasicAuth(context):
+def test_deleteBooks_deleteBook_whenInvalidBasicAuth_shouldNotDeleteBook(context):
     # Given a book has been added
     unique = str(time.time()*1000000).replace('.','')
     title = "Automation Book " + unique
