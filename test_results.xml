@@ -1,1 +1,130 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="11" time="0.504" timestamp="2024-11-03T12:10:20.851720-05:00" hostname="DESKTOP-69FJA4Q"><testcase classname="test_api" name="test_getBooks_gToken_whenNoApiAccessToken_shouldReturn403" time="0.008" /><testcase classname="test_api" name="test_getBooks_gToken_whenValidApiAccessToken_shouldReturn200" time="0.024" /><testcase classname="test_api" name="test_getBooks_searchById_whenValidId_shouldReturnBook" time="0.029" /><testcase classname="test_api" name="test_getBooks_searchById_whenInvalidId_shouldReturn404" time="0.031" /><testcase classname="test_api" name="test_getBooks_searchByTitle_whenValidTitle_shouldReturnBook" time="0.015" /><testcase classname="test_api" name="test_getBooks_searchByTitle_whenInvalidTitle_shouldReturnNoBooks" time="0.030" /><testcase classname="test_api" name="test_getBooks_searchByAuthor_whenValidAuthor_shouldReturnBook" time="0.032" /><testcase classname="test_api" name="test_getBooks_whenInvalidAuthor_shouldReturnNoBooks" time="0.032" /><testcase classname="test_api" name="test_postBooks_addBook_whenValidRequest_shouldSuccessfullyAddBook" time="0.046" /><testcase classname="test_api" name="test_deleteBooks_deleteBook_whenValidBasicAuth_shouldDeleteBook" time="0.110" /><testcase classname="test_api" name="test_deleteBooks_deleteBook_whenInvalidBasicAuth_shouldNotDeleteBook" time="0.093" /></testsuite></testsuites>
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="11" time="0.591" timestamp="2024-11-03T12:20:37.737170-05:00" hostname="DESKTOP-69FJA4Q"><testcase classname="test_api" name="test_getBooks_gToken_whenNoApiAccessToken_shouldReturn403" time="0.008" /><testcase classname="test_api" name="test_getBooks_gToken_whenValidApiAccessToken_shouldReturn200" time="0.033"><failure message="assert 200 == 999&#10; +  where 200 = &lt;Response [200]&gt;.status_code">context = {'book_ids': []}
+
+    def test_getBooks_gToken_whenValidApiAccessToken_shouldReturn200(context):
+        # Given G-Token is provided
+        headers = { 'g-token': ConfigProvider.get_g_token() }
+    
+        # When all books are requested
+        url = ConfigProvider.get_host() + "/books"
+        response = requests.request("GET", url, headers=headers, data="")
+    
+        # Then 200 is returned
+&gt;       assert response.status_code == 999
+E       assert 200 == 999
+E        +  where 200 = &lt;Response [200]&gt;.status_code
+
+test_api.py:30: AssertionError</failure></testcase><testcase classname="test_api" name="test_getBooks_searchById_whenValidId_shouldReturnBook" time="0.022"><failure message="assert 200 == 999&#10; +  where 200 = &lt;Response [200]&gt;.status_code">context = {'book_ids': []}
+
+    def test_getBooks_searchById_whenValidId_shouldReturnBook(context):
+        # Given G-Token is provided
+        headers = { 'g-token': ConfigProvider.get_g_token() }
+    
+        # When a book is requested by ID
+        url = ConfigProvider.get_host() + "/books/1"
+        response = requests.request("GET", url, headers=headers, data="")
+    
+        # Then 200 is returned
+&gt;       assert response.status_code == 999
+E       assert 200 == 999
+E        +  where 200 = &lt;Response [200]&gt;.status_code
+
+test_api.py:41: AssertionError</failure></testcase><testcase classname="test_api" name="test_getBooks_searchById_whenInvalidId_shouldReturn404" time="0.026" /><testcase classname="test_api" name="test_getBooks_searchByTitle_whenValidTitle_shouldReturnBook" time="0.031"><failure message="assert 200 == 999&#10; +  where 200 = &lt;Response [200]&gt;.status_code">context = {'book_ids': []}
+
+    def test_getBooks_searchByTitle_whenValidTitle_shouldReturnBook(context):
+        # Given G-Token is provided
+        headers = { 'g-token': ConfigProvider.get_g_token() }
+    
+        # When a book is requested by title
+        params = "?title=The Screwtape Letters"
+        url = ConfigProvider.get_host() + "/books" + params
+        response = requests.request("GET", url, headers=headers, data="")
+    
+        # Then 200 is returned
+&gt;       assert response.status_code == 999
+E       assert 200 == 999
+E        +  where 200 = &lt;Response [200]&gt;.status_code
+
+test_api.py:67: AssertionError</failure></testcase><testcase classname="test_api" name="test_getBooks_searchByTitle_whenInvalidTitle_shouldReturnNoBooks" time="0.024"><failure message="assert 200 == 999&#10; +  where 200 = &lt;Response [200]&gt;.status_code">context = {'book_ids': []}
+
+    def test_getBooks_searchByTitle_whenInvalidTitle_shouldReturnNoBooks(context):
+        # Given G-Token is provided
+        headers = { 'g-token': ConfigProvider.get_g_token() }
+    
+        # When a book is requested by a title that does not exist
+        params = "?title=This is not an existing book title"
+        url = ConfigProvider.get_host() + "/books" + params
+        response = requests.request("GET", url, headers=headers, data="")
+    
+        # Then 200 is returned
+&gt;       assert response.status_code == 999
+E       assert 200 == 999
+E        +  where 200 = &lt;Response [200]&gt;.status_code
+
+test_api.py:82: AssertionError</failure></testcase><testcase classname="test_api" name="test_getBooks_searchByAuthor_whenValidAuthor_shouldReturnBook" time="0.009"><failure message="assert 200 == 999&#10; +  where 200 = &lt;Response [200]&gt;.status_code">context = {'book_ids': []}
+
+    def test_getBooks_searchByAuthor_whenValidAuthor_shouldReturnBook(context):
+        # Given G-Token is provided
+        headers = { 'g-token': ConfigProvider.get_g_token() }
+    
+        # When a book is requested by an author
+        params = "?author=Greg Bahnsen"
+        url = ConfigProvider.get_host() + "/books" + params
+        response = requests.request("GET", url, headers=headers, data="")
+    
+        # Then 200 is returned
+&gt;       assert response.status_code == 999
+E       assert 200 == 999
+E        +  where 200 = &lt;Response [200]&gt;.status_code
+
+test_api.py:97: AssertionError</failure></testcase><testcase classname="test_api" name="test_getBooks_whenInvalidAuthor_shouldReturnNoBooks" time="0.027"><failure message="assert 200 == 999&#10; +  where 200 = &lt;Response [200]&gt;.status_code">context = {'book_ids': []}
+
+    def test_getBooks_whenInvalidAuthor_shouldReturnNoBooks(context):
+        # Given G-Token is provided
+        headers = { 'g-token': ConfigProvider.get_g_token() }
+    
+        # When a book is requested by an author that does not exist
+        params = "?author=This is not an existing author name"
+        url = ConfigProvider.get_host() + "/books" + params
+        response = requests.request("GET", url, headers=headers, data="")
+    
+        # Then 200 is returned
+&gt;       assert response.status_code == 999
+E       assert 200 == 999
+E        +  where 200 = &lt;Response [200]&gt;.status_code
+
+test_api.py:112: AssertionError</failure></testcase><testcase classname="test_api" name="test_postBooks_addBook_whenValidRequest_shouldSuccessfullyAddBook" time="0.056" /><testcase classname="test_api" name="test_deleteBooks_deleteBook_whenValidBasicAuth_shouldDeleteBook" time="0.109" /><testcase classname="test_api" name="test_deleteBooks_deleteBook_whenInvalidBasicAuth_shouldNotDeleteBook" time="0.072"><failure message="assert 200 == 999&#10; +  where 200 = &lt;Response [200]&gt;.status_code">context = {'book_ids': [40]}
+
+    def test_deleteBooks_deleteBook_whenInvalidBasicAuth_shouldNotDeleteBook(context):
+        # Given a book has been added
+        unique = str(time.time()*1000000).replace('.','')
+        title = "Automation Book " + unique
+        author = "Automation Author " + unique
+        isbn = "1234" + unique
+        releaseDate = "2019-02-01"
+        response = requests.request("POST", ConfigProvider.get_host() + "/books", headers={'g-token': 'ROM831ESV','Content-Type': 'application/json','Authorization': 'Basic Og=='}, data=json.dumps({"title": title,"author": author,"isbn": isbn,"releaseDate": releaseDate}))
+        book_id = response.json()["id"]
+        context["book_ids"].append(response.json()["id"])
+    
+        # And Basic Auth credentials is not provided
+        auth = None
+    
+        # When the book is deleted
+        url = ConfigProvider.get_host() + "/books/" + str(book_id)
+        headers = {
+            'g-token': 'ROM831ESV',
+            'Content-Type': 'application/json'
+            }
+        response = requests.request("DELETE", url, headers=headers)
+    
+        # Then 401 is returned
+        assert response.status_code == 401
+    
+        # And the book is found when requested
+        url = ConfigProvider.get_host() + "/books/" + str(book_id)
+        headers = { 'g-token': ConfigProvider.get_g_token() }
+        response = requests.request("GET", url, headers=headers, data="")
+&gt;       assert response.status_code == 999
+E       assert 200 == 999
+E        +  where 200 = &lt;Response [200]&gt;.status_code
+
+test_api.py:211: AssertionError</failure></testcase></testsuite></testsuites>
