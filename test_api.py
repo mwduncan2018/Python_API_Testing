@@ -202,7 +202,7 @@ def test_deleteBooks_deleteBook_whenInvalidBasicAuth_shouldNotDeleteBook(context
     response = requests.request("DELETE", url, headers=headers)
 
     # Then 401 is returned
-    assert response.status_code == 999
+    assert response.status_code == 401
 
     # And the book is found when requested
     url = ConfigProvider.get_host() + "/books/" + str(book_id)
